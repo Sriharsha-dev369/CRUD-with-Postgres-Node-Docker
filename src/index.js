@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import pool  from './config/db.js';
+import userRoutes from './routes/userRoutes.js';
+import errorHandling from './middleware/errorHandler.js';
 
 dotenv.config();
 
@@ -13,6 +15,8 @@ app.use(express.json());
 app.use(cors());
 
 //routes
+app.use('/api', userRoutes);
+
 app.get('/', async (req,res)=>{
     const result = await pool.query('SELECT current_database()');
     console.log(result);
@@ -21,6 +25,9 @@ app.get('/', async (req,res)=>{
 });
 
 ///Error handling middleware
+app.use(errorHandling);
+
+
 
 //Server running 
 app.listen(PORT , ()=>{
